@@ -41,12 +41,13 @@ class ScheduleGrabber:
 
 
     def extract_tutor_timeslots(self, time_slots, tutor_info):
-        # For each day
-        # Take the time slot info string and split it
-        # Add the tutors name to the array of names for that time slot. If there
-        # is no array yet, create one.
+        # tutor_info is a row of the spreadsheet
         name = tutor_info[0]
 
+        # For each day
+        # Take the time slot info string and split it
+        # Add the tutor's name to the array of names for that time slot. If there
+        # is no array yet, create one.
         for i in range(1, 7):
             day = self.days[i - 1]
             tutor_availability = tutor_info[i].split(', ')
@@ -57,6 +58,11 @@ class ScheduleGrabber:
                 continue
 
             for slot in tutor_availability:
+                # Disregard custom availability information, and focus on the
+                # time slots
+                if slot not in self.time_slot_strings:
+                    continue
+
                 tutors = time_slots[day][slot]
                 tutors.append(name)
 
@@ -72,7 +78,7 @@ class ScheduleGrabber:
                 tutors = time_slots_for_day[time_slot]
                 print(time_slot, end='\t')
 
-                # Along with the names of every tutor available for that time
+                # ...along with the names of every tutor available for that time
                 # slot
                 for tutor in tutors:
                     print(tutor, end='; ')
